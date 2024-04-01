@@ -33,6 +33,20 @@ class SalesController{
             {$push:{laptop:{laptop_name,laptop_price}}})
             return laptop
     }
+    static async Phdel(
+        _id,phone_name,phone_amount
+    ){
+        const phdel=await sales.findOneAndUpdate({_id},
+            {$pull:{phone_sales:{phone_name,phone_amount}}})
+            return phdel
+    }
+    static async Ltdel(
+        _id,laptop_name,laptop_price
+    ){
+        const ltdel=await sales.findOneAndUpdate({_id},
+            {$pull:{laptop:{laptop_name,laptop_price}}})
+            return ltdel
+    }
 
 }    
 module.exports=SalesController

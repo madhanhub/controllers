@@ -14,6 +14,7 @@ const company=require('./schema/Company')
 const sales=require('./schema/Sales')
 const UserController = require('./controllers/UserController')
 const SalesController = require('./controllers/SalesController')
+const CompanyController = require('./controllers/CompanyController')
 const userController = new user();
 
 
@@ -210,6 +211,18 @@ app.post('/sales/phone',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
+app.post('/sales/phone/delete',async(req,res)=>{
+	try{
+		const{_id,phone_name,phone_amount}=req.body
+		const phdel=await SalesController.Phdel(
+			_id,phone_name,phone_amount
+		)
+		res.status(200).json({message:'success',data:phdel})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
 app.post('/sales/laptop',async(req,res)=>{
 	try{
 		const { _id,laptop_name,laptop_price}=req.body
@@ -223,3 +236,42 @@ app.post('/sales/laptop',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
+
+app.post('/sales/laptop/delete',async(req,res)=>{
+	try{
+		const{_id,laptop_name,laptop_price}=req.body
+		const ltdel=await SalesController.Ltdel(
+			_id,laptop_name,laptop_price
+		)
+		res.status(200).json({message:'success',data:ltdel})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/company',async(req,res)=>{
+	try{
+		const{name,address,products}=req.body
+		const company=await CompanyController.Company(
+			name,
+			address,
+			products
+		)
+		res.status(200).json({message:'success',data:company})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/company/product',async(req,res)=>{
+	try{
+		const{_id,mobile,laptop}=req.body
+		const pro=await CompanyController.Pro(
+			_id,mobile,laptop
+		)
+		res.status(200).json({message:'success',data:pro})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
