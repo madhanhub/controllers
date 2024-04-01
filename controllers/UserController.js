@@ -82,5 +82,36 @@ class UserController {
             return prodel
         }catch(error){}
     }
+
+    static async UserLabels(
+        _id,labels,label,title
+    ){
+        try{
+            const Label=await user.findOneAndUpdate({
+                _id
+            },{$push:{labels:{
+                
+                label,title
+        }}},
+        {new:true})
+            return Label
+        }catch(error){
+
+        }
+    }
+    static async Labdel(
+        _id,labels,label,title
+    ){
+        try{
+            const labdel=await user.findOneAndUpdate({
+                _id
+            },{$pull:{labels:{label,title}}},
+            {new:true})
+            return labdel
+        }catch(error){
+            
+        }
+        
+    }
 }
 module.exports=UserController

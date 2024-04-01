@@ -133,3 +133,38 @@ app.post('/user/product/delete',async(req,res)=>
 		res.status(500).json({message:'failed'})
 	}
 })
+
+app.post('/user/labels',async(req,res)=>{
+	try{
+		const{_id,labels,label,title}=req.body
+		const Label=await UserController.UserLabels(
+			_id,labels,label,title
+		)
+			res.status(200).json({message:'success',data:Label})
+		}catch(error){
+			res.status(500).json({message:'failed'})
+		}
+})
+
+app.post('/labels/delete',async(req,res)=>{
+	try{
+		const{_id,labels,label,title}=req.body
+		const labdel=await UserController.Labdel(
+			_id,labels,label,title
+		)
+			res.status(200).json({message:'success',data:labdel})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+
+	}
+})
+
+app.post('/label/iscomplete',async(req,res)=>{
+	try{
+		const iscomplete=await user.findOneAndUpdate({_id:req.body._id,'labels.label':req.body.label},
+			{$set:{'labels.$.iscomplete':true}})
+			res.status(200).json({message:'success',data:iscomplete})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
