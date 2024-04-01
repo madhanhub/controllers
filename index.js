@@ -75,14 +75,25 @@ app.post('/user/login',async(req,res)=>{
 			email,
 			password
 		)
+		if(userLogin){
+			{
+			  let token= await jsonwebtoken.sign({id:userLogin.id,user_name:userLogin.user_name,email:userLogin.email},process.env.SECRET)
+			  res.setHeader('token',token)
+			  res.setHeader('user_name',userLogin.user_name)
+			  res.setHeader('email', userLogin.email)
+			  
+			  res.status(200).json({message:"success",data:token})
+			}
+		
+		  }
 		
 		res.status(200).json({message:'success',data:userLogin})
 	}catch(error){
-		res.status(200).json({message:'failed'})
+		res.status(500).json({message:'failed'})
 	}
 })
 
-app.post('/user/list',async(req,res)=>{
+app.post('/user/list',authorization,async(req,res)=>{
 	try{
 		const{_id}=req.body
 		const list=await UserController.List(
@@ -94,7 +105,7 @@ app.post('/user/list',async(req,res)=>{
 	}
 })
 
-app.post('/user/product',async(req,res)=>{
+app.post('/user/product',authorization,async(req,res)=>{
 	try{
 		const{_id,products}=req.body
 		const pro=await UserController.Product(
@@ -108,7 +119,7 @@ app.post('/user/product',async(req,res)=>{
 	}
 })
 
-app.post('/user/delete',async(req,res)=>
+app.post('/user/delete',authorization,async(req,res)=>
 {
 	try{
 		const {_id}=req.body
@@ -121,7 +132,7 @@ app.post('/user/delete',async(req,res)=>
 	}
 })
 
-app.post('/user/product/delete',async(req,res)=>
+app.post('/user/product/delete',authorization,async(req,res)=>
 {
 	try{
 		const{_id,products}=req.body
@@ -134,7 +145,7 @@ app.post('/user/product/delete',async(req,res)=>
 	}
 })
 
-app.post('/user/labels',async(req,res)=>{
+app.post('/user/labels',authorization,async(req,res)=>{
 	try{
 		const{_id,labels,label,title}=req.body
 		const Label=await UserController.UserLabels(
@@ -146,7 +157,7 @@ app.post('/user/labels',async(req,res)=>{
 		}
 })
 
-app.post('/labels/delete',async(req,res)=>{
+app.post('/labels/delete',authorization,async(req,res)=>{
 	try{
 		const{_id,labels,label,title}=req.body
 		const labdel=await UserController.Labdel(
@@ -159,10 +170,12 @@ app.post('/labels/delete',async(req,res)=>{
 	}
 })
 
-app.post('/label/iscomplete',async(req,res)=>{
+app.post('/label/iscomplete',authorization,async(req,res)=>{
 	try{
-		const iscomplete=await user.findOneAndUpdate({_id:req.body._id,'labels.label':req.body.label},
-			{$set:{'labels.$.iscomplete':true}})
+		const{_id,labels,label}=req.body
+		const iscomplete=await UserController.Iscomplete(
+			_id,labels,label
+		)
 			res.status(200).json({message:'success',data:iscomplete})
 	}catch(error){
 		res.status(500).json({message:'failed'})

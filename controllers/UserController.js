@@ -109,9 +109,21 @@ class UserController {
             {new:true})
             return labdel
         }catch(error){
-            
+
         }
         
+    }
+    static async Iscomplete(
+        _id,labels,label
+    ){
+        try{
+            const iscomplete=await user.findOneAndUpdate({_id,'labels.label':label},
+                {$set:{'labels.$.iscomplete':true}},
+                {new:true})
+                return iscomplete
+        }catch(error){
+            
+        }
     }
 }
 module.exports=UserController
