@@ -11,12 +11,9 @@ const total_sales=new mongoose.Schema({
             type:Boolean,
         default:false},
     }],
-    status:{
-        type:Boolean,
-        default:false
-    },
     laptop:[{
         laptop_name:String,
+        laptop_price:Number,
         laptop_buy:
         {   
         type:Boolean,

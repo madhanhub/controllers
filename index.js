@@ -12,7 +12,8 @@ const user=require('./schema/User')
 const product = require('./schema/product')
 const company=require('./schema/Company')
 const sales=require('./schema/Sales')
-const UserController = require('./controllers/UserController');
+const UserController = require('./controllers/UserController')
+const SalesController = require('./controllers/SalesController')
 const userController = new user();
 
 
@@ -177,6 +178,47 @@ app.post('/label/iscomplete',authorization,async(req,res)=>{
 			_id,labels,label
 		)
 			res.status(200).json({message:'success',data:iscomplete})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/sales',async(req,res)=>{
+	try{
+		const{sales_count,phone_sales,laptop}=req.body
+		const sale=await SalesController.Sales(
+			sales_count,
+			phone_sales,
+			laptop	
+		)
+		res.status(200).json({message:'success',data:sale})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+app.post('/sales/phone',async(req,res)=>{
+	try{
+		const{_id,phone_name,phone_amount}=req.body
+		const phone=await SalesController.Phone(
+			_id,
+			phone_name,
+			phone_amount
+		)
+		
+		res.status(200).json({message:'success',data:phone})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+app.post('/sales/laptop',async(req,res)=>{
+	try{
+		const { _id,laptop_name,laptop_price}=req.body
+		const laptop=await SalesController.Laptop(
+			_id,
+			laptop_name,
+			laptop_price
+		)
+		res.status(200).json({message:'success',data:laptop})
 	}catch(error){
 		res.status(500).json({message:'failed'})
 	}

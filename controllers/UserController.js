@@ -1,3 +1,4 @@
+const sales = require('../schema/Sales')
 const user=require('../schema/User')
 class UserController {
     static async addUser(
@@ -122,8 +123,35 @@ class UserController {
                 {new:true})
                 return iscomplete
         }catch(error){
-            
+
         }
     }
+    static async Sales(
+        sales_count,
+        phone_sales,
+        laptop
+    ){
+        try
+    {
+        const sale=await new sales({
+            sales_count,
+            phone_sales,
+            laptop
+    }).save()
+    return sale
+    }catch(error){}
 }
+    static async Phone(
+        _id,phone_name,phone_amount
+    ){
+        const phone=await sales.findOneAndUpdate({
+            _id
+        },{$push:{phone_sales:{phone_name,
+        phone_amount}}})
+        return phone
+    }
+   
+}
+
+    
 module.exports=UserController
