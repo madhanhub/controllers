@@ -274,4 +274,15 @@ app.post('/company/product',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
+app.post('/company/product/delete',async(req,res)=>{
+	try{
+		const{_id,mobile,laptop}=req.body
+		const prodel=await CompanyController.Prodel(
+			_id,mobile,laptop
+		)
+			res.status(200).json({message:'success',data:prodel})
+		}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
 

@@ -20,6 +20,12 @@ class CompanyController{
         },{$push:{'products.0.mobile':mobile,'products.0.laptop':laptop}})
     return pro
     }
-    
+    static async Prodel(
+        _id,mobile,laptop
+    ){
+        const prodel=await company.findOneAndUpdate({_id},
+            {$pull:{'products.0.mobile':mobile,'products.0.laptop':laptop}})
+            return prodel
+    }
 }
 module.exports=CompanyController
