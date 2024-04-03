@@ -2,11 +2,13 @@ const express = require('express')
 const app=express()
 const morgan=require('morgan')
 const mongoose= require('mongoose')
+const bodyParser = require('body-parser')
 const path= require('path')
 const axios=require('axios')
 const dotenv=require('dotenv').config()
 // dotenv.config()
 const multer=require('multer')
+
 const jsonwebtoken=require('jsonwebtoken')
 const user=require('./schema/User')
 const product = require('./schema/product')
@@ -15,6 +17,7 @@ const sales=require('./schema/Sales')
 const UserController = require('./controllers/UserController')
 const SalesController = require('./controllers/SalesController')
 const CompanyController = require('./controllers/CompanyController')
+const ProductController = require('./controllers/ProductController')
 const userController = new user();
 
 
@@ -23,6 +26,8 @@ const cors= require('./function/cors')
 const upload= require('./function/upload_images')
 const { title } = require('process')
 app.use(express.json())
+app.use(cors)
+app.use(bodyParser.json())
 app.use(morgan("dev"))
 app.use(express.urlencoded({ extended: true }))
 
@@ -70,32 +75,43 @@ app.post('/user/add',async(req,res)=>{
 
 })
 
-app.post('/user/login',async(req,res)=>{
+app.post('/userLogin',async(req,res)=>{
+	console.log(req.body)
 	try{
 		const {email,password}=req.body
 		const userLogin=await UserController.userlogin(
 			email,
 			password
-		)
-		if(userLogin){
+	)
+		if (userLogin) {
 			{
-			  let token= await jsonwebtoken.sign({id:userLogin.id,user_name:userLogin.user_name,email:userLogin.email},process.env.SECRET)
-			  res.setHeader('token',token)
-			  res.setHeader('user_name',userLogin.user_name)
-			  res.setHeader('email', userLogin.email)
-			  
-			  res.status(200).json({message:"success",data:token})
+				let token = await jsonwebtoken.sign({ id: userLogin.id,user_name:userLogin.user_name,email:userLogin.email}, process.env.SECRET)
+				res.setHeader('token', token)
+				res.setHeader('user_name', userLogin.user_name)
+				res.setHeader('email', userLogin.email)
+			
+				res.status(200).json({
+					success: true,
+					message: 'successfully logged_in',
+					result: token,
+				})
 			}
+		} //else {
+			
+		// 	res
+		// 		.status(400)
+		// 		.json({ success: false, message: 'email or password invalid ' })
+		// }
 		
-		  }
-		
-		res.status(200).json({message:'success',data:userLogin})
-	}catch(error){
-		res.status(500).json({message:'failed'})
+	} catch (error) {
+		res.status(500).json({ success: false, message: error.message, error })
+		console.log(error)
 	}
+
 })
 
-app.post('/user/list',authorization,async(req,res)=>{
+
+app.post('/user/list',async(req,res)=>{
 	try{
 		const{_id}=req.body
 		const list=await UserController.List(
@@ -286,3 +302,73 @@ app.post('/company/product/delete',async(req,res)=>{
 	}
 })
 
+app.post('/products',async(req,res)=>{
+	try{
+		const{product_type}=req.body
+		const pro=await ProductController.Product(
+			product_type
+		)
+			
+		
+		res.status(200).json({message:'success',data:pro})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/product/phone',async(req,res)=>{
+	try{
+		const{ _id,phone_name,phone_type,phone_price}=req.body
+		const productes=await ProductController.Phone(
+			_id,phone_name,phone_type,phone_price
+		)
+			res.status(200).json({message:'success',data:productes})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/product/phone/delete',async(req,res)=>{
+	try{
+		const{_id,phone_name,phone_type,phone_price}=req.body
+		const phdel=await ProductController.PhoneDelete(
+				_id,
+				phone_name,
+                phone_type,
+                phone_price
+		)
+			res.status(200).json({message:'success',data:phdel})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/product/laptop',async(req,res)=>{
+	try{
+		const{_id,laptop_price,laptop_name,laptop_type}=req.body
+		const laptop=await ProductController.Laptop(
+			_id,
+			laptop_price,
+			laptop_name,
+			laptop_type
+		)
+			res.status(200).json({message:'success',data:laptop})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/product/laptop/delete',async(req,res)=>{
+	try{
+		const{_id,laptop_name,laptop_type,laptop_price}=req.body
+		const lapdel=await ProductController.LaptopDelete(
+				_id,
+				laptop_name,
+				laptop_type,
+				laptop_price
+		)
+			res.status(200).json({message:'success',data:lapdel})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
