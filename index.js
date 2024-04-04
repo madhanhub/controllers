@@ -19,6 +19,7 @@ const UserController = require('./controllers/UserController')
 const SalesController = require('./controllers/SalesController')
 const CompanyController = require('./controllers/CompanyController')
 const ProductController = require('./controllers/ProductController')
+const StudentController=require('./controllers/StudentController')
 const userController = new user();
 
 
@@ -378,13 +379,29 @@ app.post('/product/laptop/delete',async(req,res)=>{
 })
 app.post('/student',async(req,res)=>{
 try{
-	const stu=new student({
-		name:req.body.name,
-		rollno:req.body.rollno,
-		dep:req.body.dep
-	}).save()
+	const{name,rollno,dep}=req.body
+	const stu=await StudentController.Student(
+		name,
+		rollno,
+		dep
+	)
+	
 	res.status(200).json({message:'success',data:stu})
 }catch(error){
 	res.status(500).json({message:'failed'})	
 }
 })
+
+app.post('/student/delete',async(req,res)=>{
+	try{
+		const{_id}=req.body
+		const del=await StudentController.StudentDel(
+			_id
+		)
+			res.status(200).json({message:'success',data:del})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+
