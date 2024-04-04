@@ -12,6 +12,7 @@ const multer=require('multer')
 const jsonwebtoken=require('jsonwebtoken')
 const user=require('./schema/User')
 const product = require('./schema/product')
+const student=require('./students/Student')
 const company=require('./schema/Company')
 const sales=require('./schema/Sales')
 const UserController = require('./controllers/UserController')
@@ -78,6 +79,7 @@ app.post('/user/add',async(req,res)=>{
 app.post('/userLogin',async(req,res)=>{
 	console.log(req.body)
 	try{
+		
 		const {email,password}=req.body
 		const userLogin=await UserController.userlogin(
 			email,
@@ -93,15 +95,17 @@ app.post('/userLogin',async(req,res)=>{
 				res.status(200).json({
 					success: true,
 					message: 'successfully logged_in',
-					result: token,
+					data: token,
 				})
+				console.log(token)
 			}
-		} //else {
+		} else {
 			
-		// 	res
-		// 		.status(400)
-		// 		.json({ success: false, message: 'email or password invalid ' })
-		// }
+		 	res
+		 		.status(400)
+		 		.json({ success: false, message: 'email or password invalid ' })
+		 }
+		 
 		
 	} catch (error) {
 		res.status(500).json({ success: false, message: error.message, error })
@@ -111,7 +115,7 @@ app.post('/userLogin',async(req,res)=>{
 })
 
 
-app.post('/user/list',async(req,res)=>{
+app.post('/user/list',authorization ,async(req,res)=>{
 	try{
 		const{_id}=req.body
 		const list=await UserController.List(
@@ -134,7 +138,7 @@ app.post('/user/product',authorization,async(req,res)=>{
 
 	}catch(error){
 		res.status(500).json({message:'failed'})
-	}
+	} 
 })
 
 app.post('/user/delete',authorization,async(req,res)=>
@@ -272,7 +276,7 @@ app.post('/company',async(req,res)=>{
 			name,
 			address,
 			products
-		)
+	)
 		res.status(200).json({message:'success',data:company})
 	}catch(error){
 		res.status(500).json({message:'failed'})
@@ -365,10 +369,22 @@ app.post('/product/laptop/delete',async(req,res)=>{
 				_id,
 				laptop_name,
 				laptop_type,
-				laptop_price
+				laptop_price,
 		)
 			res.status(200).json({message:'success',data:lapdel})
 	}catch(error){
 		res.status(500).json({message:'failed'})
 	}
+})
+app.post('/student',async(req,res)=>{
+try{
+	const stu=new student({
+		name:req.body.name,
+		rollno:req.body.rollno,
+		dep:req.body.dep
+	}).save()
+	res.status(200).json({message:'success',data:stu})
+}catch(error){
+	res.status(500).json({message:'failed'})	
+}
 })
