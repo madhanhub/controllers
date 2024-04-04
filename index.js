@@ -88,8 +88,9 @@ app.post('/userLogin',async(req,res)=>{
 	)
 		if (userLogin) {
 			{
-				let token = await jsonwebtoken.sign({ id: userLogin.id,user_name:userLogin.user_name,email:userLogin.email}, process.env.SECRET)
+				let token = await jsonwebtoken.sign({id:userLogin.id,user_name:userLogin.user_name,email:userLogin.email}, process.env.SECRET)
 				res.setHeader('token', token)
+				res.setHeader('id',userLogin.id)
 				res.setHeader('user_name', userLogin.user_name)
 				res.setHeader('email', userLogin.email)
 			
@@ -98,7 +99,7 @@ app.post('/userLogin',async(req,res)=>{
 					message: 'successfully logged_in',
 					data: token,
 				})
-				console.log(token)
+				
 			}
 		} else {
 			
@@ -116,12 +117,14 @@ app.post('/userLogin',async(req,res)=>{
 })
 
 
-app.post('/user/list',authorization ,async(req,res)=>{
+app.post('/user/list',authorization,async(req,res)=>{
+	console.log(req.id)
 	try{
-		const{_id}=req.body
+		const _id=req.id
 		const list=await UserController.List(
 			_id
 		)
+		console.log(list)
 		res.status(200).json({message:'success',data:list})
 	}catch(error){
 		res.status(500).json({message:'failed'})
@@ -403,5 +406,8 @@ app.post('/student/delete',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
+
+
+
 
 

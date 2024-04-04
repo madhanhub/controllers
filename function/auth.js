@@ -12,7 +12,7 @@ const authorization = function (req,res,next){
        //console.log(tokenResult.iat)
          
        if (tokengen) {
-           req.id=tokengen.id
+            req.id=tokengen.id
            req.user_name=tokengen.user_name
            req.email=tokengen.email
            
