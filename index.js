@@ -132,11 +132,15 @@ app.post('/user/list',authorization,async(req,res)=>{
 })
 
 app.post('/user/product',authorization,async(req,res)=>{
+	console.log(req.id)
 	try{
-		const{_id,products}=req.body
+		
+		const {products}=req.body
+		
 		const pro=await UserController.Product(
-			_id,
+			req.id,
 			products
+			
 		)
 			res.status(200).json({message:'success',data:pro})
 
@@ -148,9 +152,10 @@ app.post('/user/product',authorization,async(req,res)=>{
 app.post('/user/delete',authorization,async(req,res)=>
 {
 	try{
-		const {_id}=req.body
+		const _id=req.id
 		const del=await UserController.Delete(
 			_id
+			
 		)
 		res.status(200).json({message:'success',data:del})
 	}catch(error){
@@ -160,10 +165,12 @@ app.post('/user/delete',authorization,async(req,res)=>
 
 app.post('/user/product/delete',authorization,async(req,res)=>
 {
+	
 	try{
-		const{_id,products}=req.body
+		const{products}=req.body
 		const prodel=await UserController.Prodel(
-			_id,products
+			req.id,
+			products
 		)
 		res.status(200).json({message:'success',data:prodel})
 	}catch(error){
@@ -406,7 +413,16 @@ app.post('/student/delete',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
-
+ 
+// app.post('/user/product',authorization,async(req,res)=>{
+// 	try{
+// 		const pro=await user.findOneAndUpdate({_id:req.id},
+// 			{$push:{products:req.body.products}})
+// 			res.status(200).json({message:'success',data:pro})
+// 	}catch(error){
+// 		res.status(500).json({message:'failed'})
+// 	}
+// })
 
 
 

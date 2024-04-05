@@ -52,13 +52,9 @@ class UserController {
     static async Product(
         _id,products
     ){
-        try{
-            const pro=await user.findOneAndUpdate({
-                _id},{$push:{products}}
-                
-            )
+        const pro=await user.findOneAndUpdate({_id},
+            {$push:{products}})
             return pro
-        }catch(error){}
     }
     static async Delete(
         _id
@@ -79,7 +75,8 @@ class UserController {
         try{
             const prodel=await user.findOneAndUpdate({
                 _id
-            },{$pull:{products}})
+            },{$pull:{products}},
+            {new:true})
             return prodel
         }catch(error){}
     }
