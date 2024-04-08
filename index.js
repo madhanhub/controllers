@@ -131,7 +131,7 @@ app.post('/user/list',authorization,async(req,res)=>{
 })
 
 app.post('/user/product',authorization,async(req,res)=>{
-	console.log(req.id)
+	
 	try{
 		
 		const {products}=req.body
@@ -296,7 +296,6 @@ app.post('/company',async(req,res)=>{
 	}
 })
 
-
 app.post('/company/login',async(req,res)=>{
 	console.log(req.body)
 	try{
@@ -369,9 +368,7 @@ app.post('/products',async(req,res)=>{
 		const{product_type}=req.body
 		const pro=await ProductController.Product(
 			product_type
-		)
-			
-		
+		)	
 		res.status(200).json({message:'success',data:pro})
 	}catch(error){
 		res.status(500).json({message:'failed'})
@@ -452,13 +449,14 @@ try{
 
 app.post('/student/login',async(req,res)=>{
 	try{
-		const login=await student.findOne({rollno:req.body.rollno})
+		const{rollno}=req.body
+		const login=await StudentController.S_Login(rollno)
 		if (login) {
 			{
 				let token = await jsonwebtoken.sign({id:login.id,rollno:login.rollno}, process.env.SECRET)
 				res.setHeader('token', token)
 				res.setHeader('id',login.id)
-				res.setHeader('rollno',login.rollno)
+				res.setHeader('rollno',login.rollno),
 
 				res.status(200).json({
 					success: true,
@@ -500,6 +498,27 @@ app.post('/student/sports',authorization,async(req,res)=>{
 	}
 })
 
-
+app.post('/student/sportd/delete',authorization,async(req,res)=>{
+try{
+	const {sports}=req.body
+	const sdel=await StudentController.D_Sports(
+		req.id,
+		sports
+	)
+		res.status(200).json({message:'success',data:sdel})
+}catch(error){
+	res.status(500).json({message:'failed'})
+}
+})
+app.post('/student/list',authorization,async(req,res)=>{
+	try{
+		const _id=req.id
+		const list=await StudentController.S_List(
+			_id)
+		res.status(200).json({message:'success',data:list})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
 
 

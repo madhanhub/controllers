@@ -10,6 +10,16 @@ class StudentController{
         }).save()
         return stu
     }
+    static async S_Login(
+        rollno
+    ){
+        const login=await student.findOne({
+            rollno
+    })
+    return login
+    }
+    
+
     static async StudentDel(
         _id
     ){
@@ -24,6 +34,21 @@ class StudentController{
         const Sport=await student.findOneAndUpdate({_id},
             {$push:{sports}})
             return Sport
+    }
+    static async D_Sports(
+        _id,sports
+    ){
+        const sdel=await student.findOneAndUpdate({_id},
+            {$pull:{sports}})
+            return sdel
+    }
+    static async S_List(
+        _id
+    ){
+        const list=await student.findOne({
+            _id
+        })
+        return list
     }
 
 }
