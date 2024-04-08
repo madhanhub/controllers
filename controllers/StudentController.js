@@ -18,5 +18,13 @@ class StudentController{
         })
         return del
     }
+    static async Sports(
+        _id,sports
+    ){
+        const Sport=await student.findOneAndUpdate({_id},
+            {$push:{sports}})
+            return Sport
+    }
+
 }
 module.exports=StudentController

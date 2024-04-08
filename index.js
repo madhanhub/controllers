@@ -62,19 +62,18 @@ app.post('/user/add',async(req,res)=>{
     try{
 		const {user_name,mobile,email,address,password,products,label,} = req.body
         const useradd=await UserController.addUser(
-            user_name,
+          user_name,
           mobile,
           email,
           address,
           password,
-           products,
+          products,
           label,
         )
         res.status(200).json({message:'success',data:useradd})
     }catch(error){
         res.status(500).json({message:'failed'})
     }
-
 })
 
 app.post('/userLogin',async(req,res)=>{
@@ -165,7 +164,7 @@ app.post('/user/delete',authorization,async(req,res)=>
 
 app.post('/user/product/delete',authorization,async(req,res)=>
 {
-	
+
 	try{
 		const{products}=req.body
 		const prodel=await UserController.Prodel(
@@ -180,9 +179,9 @@ app.post('/user/product/delete',authorization,async(req,res)=>
 
 app.post('/user/labels',authorization,async(req,res)=>{
 	try{
-		const{_id,labels,label,title}=req.body
+		const{labels,label,title}=req.body
 		const Label=await UserController.UserLabels(
-			_id,labels,label,title
+			req.id,labels,label,title
 		)
 			res.status(200).json({message:'success',data:Label})
 		}catch(error){
@@ -282,11 +281,14 @@ app.post('/sales/laptop/delete',async(req,res)=>{
 
 app.post('/company',async(req,res)=>{
 	try{
-		const{name,address,products}=req.body
+		const{name,address,products,b_name,email,password}=req.body
 		const company=await CompanyController.Company(
 			name,
 			address,
-			products
+			products,
+			b_name,
+			email,
+			password
 	)
 		res.status(200).json({message:'success',data:company})
 	}catch(error){
@@ -294,22 +296,67 @@ app.post('/company',async(req,res)=>{
 	}
 })
 
-app.post('/company/product',async(req,res)=>{
+
+app.post('/company/login',async(req,res)=>{
+	console.log(req.body)
 	try{
-		const{_id,mobile,laptop}=req.body
+		
+		const {email,password}=req.body
+		const c_login=await company.findOne({
+			email,
+			password
+		})
+		if (c_login) {
+			{
+				let token = await jsonwebtoken.sign({id:c_login.id,b_name:c_login.b_name,email:c_login.email}, process.env.SECRET)
+				res.setHeader('token', token)
+				res.setHeader('id',c_login.id)
+				res.setHeader('b_name', c_login.b_name)
+				res.setHeader('email', c_login.email)
+			
+				res.status(200).json({
+					success: true,
+					message: 'successfully logged_in',
+					data: token,
+				})
+				
+			}
+		} else {
+			
+		 	res
+		 		.status(400)
+		 		.json({ success: false, message: 'email or password invalid ' })
+		 }
+		 
+		
+	} catch (error) {
+		res.status(500).json({ success: false, message: error.message, error })
+		console.log(error)
+	}
+
+})
+
+
+app.post('/company/product',authorization,async(req,res)=>{
+	try{
+		const{mobile,laptop}=req.body
 		const pro=await CompanyController.Pro(
-			_id,mobile,laptop
+			req.id,
+			mobile,
+			laptop
 		)
 		res.status(200).json({message:'success',data:pro})
 	}catch(error){
 		res.status(500).json({message:'failed'})
 	}
 })
-app.post('/company/product/delete',async(req,res)=>{
+app.post('/company/product/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,mobile,laptop}=req.body
+		const{mobile,laptop}=req.body
 		const prodel=await CompanyController.Prodel(
-			_id,mobile,laptop
+			req.id,
+			mobile,
+			laptop
 		)
 			res.status(200).json({message:'success',data:prodel})
 		}catch(error){
@@ -389,11 +436,12 @@ app.post('/product/laptop/delete',async(req,res)=>{
 })
 app.post('/student',async(req,res)=>{
 try{
-	const{name,rollno,dep}=req.body
+	const{name,rollno,dep,sports}=req.body
 	const stu=await StudentController.Student(
 		name,
 		rollno,
-		dep
+		dep,
+		sports
 	)
 	
 	res.status(200).json({message:'success',data:stu})
@@ -402,7 +450,16 @@ try{
 }
 })
 
-app.post('/student/delete',async(req,res)=>{
+app.post('/student/login',async(req,res)=>{
+	try{
+		const login=await student.findOne({rollno:req.body.rollno})
+		res.status(200).json({message:'success',data:login})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/student/delete',authorization,async(req,res)=>{
 	try{
 		const{_id}=req.body
 		const del=await StudentController.StudentDel(
@@ -414,15 +471,18 @@ app.post('/student/delete',async(req,res)=>{
 	}
 })
  
-// app.post('/user/product',authorization,async(req,res)=>{
-// 	try{
-// 		const pro=await user.findOneAndUpdate({_id:req.id},
-// 			{$push:{products:req.body.products}})
-// 			res.status(200).json({message:'success',data:pro})
-// 	}catch(error){
-// 		res.status(500).json({message:'failed'})
-// 	}
-// })
+app.post('/student/sports',async(req,res)=>{
+	try{
+		const{_id,sports}=req.body
+		const sportes=await StudentController.Sports(
+			_id,
+			sports
+		)
+			res.status(200).json({message:'success',data:sportes})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
 
 
 

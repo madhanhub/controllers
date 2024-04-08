@@ -3,12 +3,15 @@ const company= require('../schema/Company')
 class CompanyController{
 
     static async Company(
-        name,address,product
+        name,address,product,b_name,email,password
     ){
         const Companies=await new company({
             name,
             address,
-            product  
+            product,
+            b_name,
+            email,
+            password
         }).save()
         return Companies
     }

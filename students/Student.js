@@ -8,6 +8,9 @@ const student=new mongoose.Schema({
     },
     dep:{
         type:String
-    }
+    },
+    sports:[{
+        type:String
+    }]
 })
 module.exports=mongoose.model('Student',student)

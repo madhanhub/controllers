@@ -15,6 +15,7 @@ const authorization = function (req,res,next){
             req.id=tokengen.id
            req.user_name=tokengen.user_name
            req.email=tokengen.email
+           req.b_name=tokengen.b_name
            
            next()  
        } else {

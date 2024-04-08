@@ -8,6 +8,15 @@ const company=new mongoose.Schema({
             message: 'Invalid name. Name should only contain alphabets.',
           },
     },
+    b_name:{
+        type:String
+    },
+    email:{
+        type:String
+    },
+    password:{
+        type:String
+    },
     address:{
         type:String,
     },
