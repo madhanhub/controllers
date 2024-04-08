@@ -453,6 +453,23 @@ try{
 app.post('/student/login',async(req,res)=>{
 	try{
 		const login=await student.findOne({rollno:req.body.rollno})
+		if (login) {
+			{
+				let token = await jsonwebtoken.sign({id:login.id,rollno:login.rollno}, process.env.SECRET)
+				res.setHeader('token', token)
+				res.setHeader('id',login.id)
+				res.setHeader('rollno',login.rollno)
+
+				res.status(200).json({
+					success: true,
+					message: 'successfully logged_in',
+					data: token,
+				})
+				
+			}
+			
+		}
+		
 		res.status(200).json({message:'success',data:login})
 	}catch(error){
 		res.status(500).json({message:'failed'})
@@ -461,7 +478,7 @@ app.post('/student/login',async(req,res)=>{
 
 app.post('/student/delete',authorization,async(req,res)=>{
 	try{
-		const{_id}=req.body
+		const _id=req.id
 		const del=await StudentController.StudentDel(
 			_id
 		)
@@ -470,12 +487,11 @@ app.post('/student/delete',authorization,async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
- 
-app.post('/student/sports',async(req,res)=>{
+app.post('/student/sports',authorization,async(req,res)=>{
 	try{
-		const{_id,sports}=req.body
+		const {sports}=req.body
 		const sportes=await StudentController.Sports(
-			_id,
+			req.id,
 			sports
 		)
 			res.status(200).json({message:'success',data:sportes})
