@@ -34,9 +34,9 @@ class SalesController{
     }
    
     static async Laptop(
-        _id,laptop_name,laptop_price
+        u_id,laptop_name,laptop_price
     ){
-        const laptop=await sales.findOneAndUpdate({_id},
+        const laptop=await sales.findOneAndUpdate({u_id},
             {$push:{laptop:{laptop_name,laptop_price}}})
             return laptop
     }
@@ -48,9 +48,9 @@ class SalesController{
             return phdel
     }
     static async Ltdel(
-        _id,laptop_name,laptop_price
+        u_id,laptop_name,laptop_price
     ){
-        const ltdel=await sales.findOneAndUpdate({_id},
+        const ltdel=await sales.findOneAndUpdate({u_id},
             {$pull:{laptop:{laptop_name,laptop_price}}})
             return ltdel
     }

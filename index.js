@@ -269,11 +269,11 @@ app.post('/sales/phone/delete',authorization,async(req,res)=>{
 	}
 })
 
-app.post('/sales/laptop',async(req,res)=>{
+app.post('/sales/laptop',authorization,async(req,res)=>{
 	try{
-		const { _id,laptop_name,laptop_price}=req.body
+		const {laptop_name,laptop_price}=req.body
 		const laptop=await SalesController.Laptop(
-			_id,
+			req.u_id,
 			laptop_name,
 			laptop_price
 		)
@@ -283,11 +283,11 @@ app.post('/sales/laptop',async(req,res)=>{
 	}
 })
 
-app.post('/sales/laptop/delete',async(req,res)=>{
+app.post('/sales/laptop/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,laptop_name,laptop_price}=req.body
+		const{laptop_name,laptop_price}=req.body
 		const ltdel=await SalesController.Ltdel(
-			_id,laptop_name,laptop_price
+			req.u_id,laptop_name,laptop_price
 		)
 		res.status(200).json({message:'success',data:ltdel})
 	}catch(error){
