@@ -8,6 +8,9 @@ const company=new mongoose.Schema({
             message: 'Invalid name. Name should only contain alphabets.',
           },
     },
+    u_id:{
+        type:Number
+    },
     b_name:{
         type:String
     },

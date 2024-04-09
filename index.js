@@ -191,9 +191,9 @@ app.post('/user/labels',authorization,async(req,res)=>{
 
 app.post('/labels/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,labels,label,title}=req.body
+		const{labels,label,title}=req.body
 		const labdel=await UserController.Labdel(
-			_id,labels,label,title
+			req.id,labels,label,title
 		)
 			res.status(200).json({message:'success',data:labdel})
 	}catch(error){
@@ -204,9 +204,9 @@ app.post('/labels/delete',authorization,async(req,res)=>{
 
 app.post('/label/iscomplete',authorization,async(req,res)=>{
 	try{
-		const{_id,labels,label}=req.body
+		const{labels,label}=req.body
 		const iscomplete=await UserController.Iscomplete(
-			_id,labels,label
+			req.id,labels,label
 		)
 			res.status(200).json({message:'success',data:iscomplete})
 	}catch(error){
@@ -216,24 +216,40 @@ app.post('/label/iscomplete',authorization,async(req,res)=>{
 
 app.post('/sales',async(req,res)=>{
 	try{
-		const{sales_count,phone_sales,laptop}=req.body
+		const{user_name,sales_count,phone_sales,laptop,email,u_id}=req.body
 		const sale=await SalesController.Sales(
+			
+			
+			user_name,
 			sales_count,
 			phone_sales,
-			laptop	
+			laptop	,
+			email,
+			u_id
 		)
 		res.status(200).json({message:'success',data:sale})
 	}catch(error){
 		res.status(500).json({message:'failed'})
 	}
 })
-app.post('/sales/phone',async(req,res)=>{
+
+app.post('/sales/list',authorization,async(req,res)=>{
 	try{
-		const{_id,phone_name,phone_amount}=req.body
+		const u_id=req.u_id
+		const list=await SalesController.S_List(u_id)
+		res.status(200).json({message:"success",data:list})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
+app.post('/sales/phone',authorization,async(req,res)=>{
+	try{
+		const{phone_name,phone_amount}=req.body
 		const phone=await SalesController.Phone(
-			_id,
+			req.u_id,
 			phone_name,
-			phone_amount
+			phone_amount,	
 		)
 		
 		res.status(200).json({message:'success',data:phone})
@@ -241,11 +257,11 @@ app.post('/sales/phone',async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
-app.post('/sales/phone/delete',async(req,res)=>{
+app.post('/sales/phone/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,phone_name,phone_amount}=req.body
+		const{phone_name,phone_amount}=req.body
 		const phdel=await SalesController.Phdel(
-			_id,phone_name,phone_amount
+			req.u_id,phone_name,phone_amount
 		)
 		res.status(200).json({message:'success',data:phdel})
 	}catch(error){
@@ -281,14 +297,15 @@ app.post('/sales/laptop/delete',async(req,res)=>{
 
 app.post('/company',async(req,res)=>{
 	try{
-		const{name,address,products,b_name,email,password}=req.body
+		const{name,address,products,b_name,email,password,u_id}=req.body
 		const company=await CompanyController.Company(
 			name,
 			address,
 			products,
 			b_name,
 			email,
-			password
+			password,
+			u_id,
 	)
 		res.status(200).json({message:'success',data:company})
 	}catch(error){
@@ -307,12 +324,12 @@ app.post('/company/login',async(req,res)=>{
 		})
 		if (c_login) {
 			{
-				let token = await jsonwebtoken.sign({id:c_login.id,b_name:c_login.b_name,email:c_login.email}, process.env.SECRET)
+				let token = await jsonwebtoken.sign({id:c_login.id,b_name:c_login.b_name,email:c_login.email,u_id:c_login.u_id}, process.env.SECRET)
 				res.setHeader('token', token)
 				res.setHeader('id',c_login.id)
 				res.setHeader('b_name', c_login.b_name)
 				res.setHeader('email', c_login.email)
-			
+				res.setHeader('u_id',c_login.u_id)
 				res.status(200).json({
 					success: true,
 					message: 'successfully logged_in',
@@ -462,10 +479,8 @@ app.post('/student/login',async(req,res)=>{
 					success: true,
 					message: 'successfully logged_in',
 					data: token,
-				})
-				
-			}
-			
+				})	
+			}	
 		}
 		
 		res.status(200).json({message:'success',data:login})

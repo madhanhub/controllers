@@ -1,5 +1,14 @@
 const mongoose=require('mongoose')
 const total_sales=new mongoose.Schema({
+    user_name:{
+        type:String
+    },
+    u_id:{
+        type:Number
+    },
+    email:{
+        type:String
+    },
     sales_count:{
         type:Number,
     },

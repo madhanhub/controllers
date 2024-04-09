@@ -2,25 +2,32 @@ const sales = require('../schema/Sales')
 
 class SalesController{
     static async Sales(
+       user_name,
         sales_count,
         phone_sales,
-        laptop
+        laptop,
+        email,
+        u_id
     ){
         try
     {
         const sale=await new sales({
+            user_name,
             sales_count,
             phone_sales,
-            laptop
+            laptop,
+            email,
+            u_id
+
     }).save()
     return sale
     }catch(error){}
 }
     static async Phone(
-        _id,phone_name,phone_amount
+        u_id,phone_name,phone_amount
     ){
         const phone=await sales.findOneAndUpdate({
-            _id
+            u_id
         },{$push:{phone_sales:{phone_name,
         phone_amount}}})
         return phone
@@ -34,9 +41,9 @@ class SalesController{
             return laptop
     }
     static async Phdel(
-        _id,phone_name,phone_amount
+        u_id,phone_name,phone_amount
     ){
-        const phdel=await sales.findOneAndUpdate({_id},
+        const phdel=await sales.findOneAndUpdate({u_id},
             {$pull:{phone_sales:{phone_name,phone_amount}}})
             return phdel
     }
@@ -46,6 +53,14 @@ class SalesController{
         const ltdel=await sales.findOneAndUpdate({_id},
             {$pull:{laptop:{laptop_name,laptop_price}}})
             return ltdel
+    }
+    static async S_List(
+        u_id
+    ){
+        const list=await sales.findOne(
+            {u_id}
+        )
+        return list
     }
 
 }    
