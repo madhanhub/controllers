@@ -162,6 +162,18 @@ app.post('/user/delete',authorization,async(req,res)=>
 	}
 })
 
+app.post('/user/statu',authorization,async(req,res)=>{
+	try{
+		const _id=req.id
+		const sts=await UserController.Status(
+			_id
+		)
+			res.status(200).json({message:'success',data:sts})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})
+
 app.post('/user/product/delete',authorization,async(req,res)=>
 {
 

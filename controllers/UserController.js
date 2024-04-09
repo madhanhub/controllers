@@ -147,6 +147,14 @@ class UserController {
         phone_amount}}})
         return phone
     }
+    static async Status(
+        _id,statu
+    ){
+        const sts=await user.findOneAndUpdate({_id},
+            {statu:true})
+    return sts
+        }
+    
    
 }
 
