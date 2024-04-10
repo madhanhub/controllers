@@ -1,17 +1,18 @@
 const product=require('../schema/product')
 class ProductController{
     static async Product(
-        product_type
+        product_type,u_id
     ){
         const pro=await new product({
-            product_type
+            product_type,
+            u_id
         }).save()
         return pro
     }
     static async Phone(
-        _id,phone_name,phone_type,phone_price
+        u_id,phone_name,phone_type,phone_price
     ){
-        const phone=await product.findOneAndUpdate({_id},
+        const phone=await product.findOneAndUpdate({u_id},
             {$push:{'product.0.phone':{
                 phone_name,
                 phone_type,
@@ -20,9 +21,9 @@ class ProductController{
             return phone
     }
     static async PhoneDelete(
-        _id,phone_name,phone_type,phone_price
+        u_id,phone_name,phone_type,phone_price
     ){
-        const phdel=await product.findOneAndUpdate({_id},
+        const phdel=await product.findOneAndUpdate({u_id},
             {$pull:{'product.0.phone':{
                 phone_name,
                 phone_type,
@@ -32,11 +33,11 @@ class ProductController{
     }
 
     static async Laptop(
-        _id,laptop_price,laptop_name,laptop_type
+        u_id,laptop_price,laptop_name,laptop_type
     ){
-        const laptop=await product.findOneAndUpdate({_id},
+        const laptop=await product.findOneAndUpdate({u_id},
             {$push:{'product.0.laptop':{
-               _id, 
+                
                laptop_price,
                laptop_name,
                laptop_type
@@ -45,11 +46,11 @@ class ProductController{
     }
 
     static async LaptopDelete(
-        _id,laptop_name,laptop_type,laptop_price
+        u_id,laptop_name,laptop_type,laptop_price
     ){
-        const lapdel=await product.findOneAndUpdate({_id},
+        const lapdel=await product.findOneAndUpdate({u_id},
             {$pull:{'product.0.laptop':{
-               _id,laptop_name,laptop_type,laptop_price
+            laptop_name,laptop_type,laptop_price
             }}})
             return lapdel
     }

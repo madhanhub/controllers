@@ -40,6 +40,9 @@ product_type:{
         // }
              
 }],
+u_id:{
+    type:Number
+},
         
     
 })

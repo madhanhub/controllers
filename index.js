@@ -173,10 +173,8 @@ app.post('/user/statu',authorization,async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
-
 app.post('/user/product/delete',authorization,async(req,res)=>
 {
-
 	try{
 		const{products}=req.body
 		const prodel=await UserController.Prodel(
@@ -394,9 +392,10 @@ app.post('/company/product/delete',authorization,async(req,res)=>{
 
 app.post('/products',async(req,res)=>{
 	try{
-		const{product_type}=req.body
+		const{product_type,u_id}=req.body
 		const pro=await ProductController.Product(
-			product_type
+			product_type,
+			u_id
 		)	
 		res.status(200).json({message:'success',data:pro})
 	}catch(error){
@@ -404,11 +403,11 @@ app.post('/products',async(req,res)=>{
 	}
 })
 
-app.post('/product/phone',async(req,res)=>{
+app.post('/product/phone',authorization,async(req,res)=>{
 	try{
-		const{ _id,phone_name,phone_type,phone_price}=req.body
+		const{ phone_name,phone_type,phone_price}=req.body
 		const productes=await ProductController.Phone(
-			_id,phone_name,phone_type,phone_price
+			req.u_id,phone_name,phone_type,phone_price
 		)
 			res.status(200).json({message:'success',data:productes})
 	}catch(error){
@@ -416,11 +415,11 @@ app.post('/product/phone',async(req,res)=>{
 	}
 })
 
-app.post('/product/phone/delete',async(req,res)=>{
+app.post('/product/phone/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,phone_name,phone_type,phone_price}=req.body
+		const{phone_name,phone_type,phone_price}=req.body
 		const phdel=await ProductController.PhoneDelete(
-				_id,
+				req.u_id,
 				phone_name,
                 phone_type,
                 phone_price
@@ -431,11 +430,11 @@ app.post('/product/phone/delete',async(req,res)=>{
 	}
 })
 
-app.post('/product/laptop',async(req,res)=>{
+app.post('/product/laptop',authorization,async(req,res)=>{
 	try{
-		const{_id,laptop_price,laptop_name,laptop_type}=req.body
+		const{laptop_price,laptop_name,laptop_type}=req.body
 		const laptop=await ProductController.Laptop(
-			_id,
+			req.u_id,
 			laptop_price,
 			laptop_name,
 			laptop_type
@@ -446,11 +445,11 @@ app.post('/product/laptop',async(req,res)=>{
 	}
 })
 
-app.post('/product/laptop/delete',async(req,res)=>{
+app.post('/product/laptop/delete',authorization,async(req,res)=>{
 	try{
-		const{_id,laptop_name,laptop_type,laptop_price}=req.body
+		const{laptop_name,laptop_type,laptop_price}=req.body
 		const lapdel=await ProductController.LaptopDelete(
-				_id,
+				req.u_id,
 				laptop_name,
 				laptop_type,
 				laptop_price,
