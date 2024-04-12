@@ -135,7 +135,6 @@ app.post('/user/product',authorization,async(req,res)=>{
 	try{
 		
 		const {products}=req.body
-		
 		const pro=await UserController.Product(
 			req.id,
 			products
@@ -461,12 +460,13 @@ app.post('/product/laptop/delete',authorization,async(req,res)=>{
 })
 app.post('/student',async(req,res)=>{
 try{
-	const{name,rollno,dep,sports}=req.body
+	const{name,rollno,dep,sports,cit}=req.body
 	const stu=await StudentController.Student(
 		name,
 		rollno,
 		dep,
-		sports
+		sports,
+		cit
 	)
 	
 	res.status(200).json({message:'success',data:stu})
@@ -546,5 +546,16 @@ app.post('/student/list',authorization,async(req,res)=>{
 		res.status(500).json({message:'failed'})
 	}
 })
-
-
+app.post('/student/marks',async(req,res)=>{
+	try{
+		const mark=await student.findOneAndUpdate({_id:req.body._id},
+			{$push:{cit:{
+				os:req.body.os,
+				ds:req.body.ds,
+				dm:req.body.dm
+			}}})
+			res.status(200).json({message:'success',data:mark})
+	}catch(error){
+		res.status(500).json({message:'failed'})
+	}
+})

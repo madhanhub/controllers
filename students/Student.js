@@ -11,6 +11,12 @@ const student=new mongoose.Schema({
     },
     sports:[{
         type:String
-    }]
+    }],
+    cit:[{
+        os:{type:Number},
+        dm:{type:Number},
+        ds:{type:Number}
+
+    }],
 })
 module.exports=mongoose.model('Student',student)
