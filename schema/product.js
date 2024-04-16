@@ -12,7 +12,7 @@ const product =new mongoose.Schema({
     // },
     // sales_count:{
     //     type:Number,
-    // },
+    // }, 
     // statu:{
     //     type:Boolean,
     //     default:true
