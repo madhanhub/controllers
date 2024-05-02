@@ -33,7 +33,7 @@ app.use(bodyParser.json())
 app.use(morgan("dev"))
 app.use(express.urlencoded({ extended: true }))
 
-
+//sx
 app.listen(5555, () => {
 	console.log('SERVER Run')
 
